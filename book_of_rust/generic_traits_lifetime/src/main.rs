@@ -1,3 +1,5 @@
+// generic data types
+
 fn largest_initial(list: &[i32]) -> i32 {
     let mut largest = list[0];
 
@@ -72,7 +74,13 @@ impl Point<f32, f32> {
     }
 }
 
+// traits
+use generic_traits_lifetime::{
+    self, notify2, returns_summarizable, NewsArticle, Pair, Summary, Tweet,
+};
+
 fn main() {
+    // generic data types
     let number_list = vec![34, 50, 25, 100, 65];
 
     let result = largest_initial(&number_list);
@@ -108,4 +116,39 @@ fn main() {
 
     let p3 = p1.mixup(p2);
     println!("p3.x = {}, p3.y = {}", p3.x, p3.y);
+
+    // traits
+    let tweet = Tweet {
+        username: String::from("horse_ebooks"),
+        content: String::from("of course, as you probably already know, people"),
+        reply: false,
+        retweet: false,
+    };
+
+    println!("1 new tweet: {}", tweet.summarize());
+
+    let article = NewsArticle {
+        headline: String::from("Penguins win the Stanley Cup Championship!"),
+        location: String::from("Pittsburgh, PA, USA"),
+        author: String::from("Iceburgh"),
+        content: String::from(
+            "The Pittsburgh Penguins once again are the best \
+             hockey team in the NHL.",
+        ),
+    };
+
+    println!("New article available! {}", article.summarize());
+
+    notify2(&article, &tweet);
+
+    returns_summarizable();
+
+    let pr1 = Pair::new(1, 1);
+    let pr2 = Pair::new(1, 2);
+    pr1.cmp_display();
+    pr2.cmp_display();
+
+    let s = 3.to_string();
+
+    println!("{:?}", s);
 }
