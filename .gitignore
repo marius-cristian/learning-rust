@@ -1,1 +1,2 @@
 book_of_rust/*/target
+tokio/*/target
