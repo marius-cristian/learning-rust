@@ -2,15 +2,23 @@ enum List {
     Cons(i32, Box<List>),
     Nil,
 }
+use std::cell::RefCell;
 use std::rc::Rc;
 enum ListRc {
     ConsRc(i32, Rc<ListRc>),
     NilRc,
 }
 
+#[derive(Debug)]
+enum ListRcRefCell {
+    ConsRcRefCell(Rc<RefCell<i32>>, Rc<ListRcRefCell>),
+    NilRcRefCell,
+}
 use crate::List::{Cons, Nil};
 
 use crate::ListRc::{ConsRc, NilRc};
+
+use crate::ListRcRefCell::{ConsRcRefCell, NilRcRefCell};
 
 fn main() {
     let list = Cons(1, Box::new(Cons(2, Box::new(Cons(3, Box::new(Nil))))));
@@ -47,6 +55,19 @@ fn main() {
     println!("CustomSmartPointer created.");
     drop(c);
     println!("CustomSmartPointer dropped before the end of main.");
+
+    let value = Rc::new(RefCell::new(5));
+
+    let a = Rc::new(ConsRcRefCell(Rc::clone(&value), Rc::new(NilRcRefCell)));
+
+    let b = ConsRcRefCell(Rc::new(RefCell::new(6)), Rc::clone(&a));
+    let c = ConsRcRefCell(Rc::new(RefCell::new(10)), Rc::clone(&a));
+
+    *value.borrow_mut() += 10;
+
+    println!("a after = {:?}", a);
+    println!("b after = {:?}", b);
+    println!("c after = {:?}", c);
 }
 
 use std::ops::Deref;
